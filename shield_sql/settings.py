@@ -88,7 +88,7 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT'),
         'OPTIONS': {
             'ssl': {
-                'ca':'ca.pem',
+                'ca': str(BASE_DIR / 'ca.pem'),
             },
         },
     }
