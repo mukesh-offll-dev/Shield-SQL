@@ -1,0 +1,34 @@
+{% extends 'detective/base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-12 text-center">
+    <div class="shield-panel p-12 rounded-lg border-2 border-cyan-500/50 relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-4 font-mono text-xs text-cyan-500/30">ID: SHIELD-2025-SQL-MURDER</div>
+
+        <h2 class="orbitron text-4xl font-bold mb-8 text-cyan-400 glow-text">MURDER MYSTERY: CASE #8821</h2>
+
+        <div class="text-left space-y-6 text-lg leading-relaxed mb-10">
+            <p class="text-cyan-100">
+                <span class="text-cyan-400 font-bold">MISSION OBJECTIVE:</span> A critical security breach has resulted
+                in a high-profile homicide. Standard forensics are insufficient. You have been granted temporary Level 7
+                access to the SHIELD Global Database.
+            </p>
+            <p>
+                As an Elite Data Investigator, your task is to navigate through millions of records—crime scenes, phone
+                logs, bank transactions, and interviews—to identify the perpetrator.
+            </p>
+            <div class="bg-cyan-900/20 border-l-4 border-cyan-500 p-6 italic text-cyan-300">
+                "A murder occurred on 15 August 2025 at Rockfort Temple Parking, Trichy around 9:30 PM.
+               "
+            </div>
+        </div>
+
+        <div class="flex justify-center">
+            <a href="{% url 'detective:investigate' %}"
+                class="btn-shield px-12 py-4 rounded-full orbitron font-bold text-white text-xl">
+                Initiate Investigation
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

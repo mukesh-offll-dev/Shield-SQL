@@ -1,0 +1,104 @@
+{% extends 'detective/base.html' %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="shield-panel p-8 rounded-lg border border-cyan-500/30">
+        <h2 class="orbitron text-3xl font-bold mb-8 text-cyan-400 glow-text">INTELLIGENCE ASSET REGISTRY</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Crime Scene -->
+            <div class="bg-cyan-900/10 border border-cyan-500/50 p-4 rounded shadow-lg shadow-cyan-500/10">
+                <h3 class="orbitron text-sm font-bold text-cyan-400 mb-2 border-b border-cyan-500/30 pb-1">crime_scene
+                </h3>
+                <ul class="text-xs space-y-1 font-mono text-cyan-200">
+                    <li>id (PK)</li>
+                    <li>date</li>
+                    <li>city</li>
+                    <li>location</li>
+                    <li>description</li>
+                </ul>
+            </div>
+
+            <!-- People -->
+            <div class="bg-cyan-900/10 border border-cyan-500/50 p-4 rounded shadow-lg shadow-cyan-500/10">
+                <h3 class="orbitron text-sm font-bold text-cyan-400 mb-2 border-b border-cyan-500/30 pb-1">people</h3>
+                <ul class="text-xs space-y-1 font-mono text-cyan-200">
+                    <li>person_id (PK)</li>
+                    <li>name</li>
+                    <li>address</li>
+                    <li>occupation</li>
+                </ul>
+            </div>
+
+            <!-- Vehicles -->
+            <div class="bg-cyan-900/10 border border-cyan-500/50 p-4 rounded shadow-lg shadow-cyan-500/10">
+                <h3 class="orbitron text-sm font-bold text-cyan-400 mb-2 border-b border-cyan-500/30 pb-1">vehicles</h3>
+                <ul class="text-xs space-y-1 font-mono text-cyan-200">
+                    <li>vehicle_id (PK)</li>
+                    <li>owner_id (FK → people.person_id)</li>
+                    <li>plate_number</li>
+                    <li>vehicle_type</li>
+                    <li>color</li>
+                </ul>
+            </div>
+
+            <!-- Interviews -->
+            <div class="bg-cyan-900/10 border border-cyan-500/50 p-4 rounded shadow-lg shadow-cyan-500/10">
+                <h3 class="orbitron text-sm font-bold text-cyan-400 mb-2 border-b border-cyan-500/30 pb-1">interviews
+                </h3>
+                <ul class="text-xs space-y-1 font-mono text-cyan-200">
+                    <li>interview_id (PK)</li>
+                    <li>person_id (FK → people.person_id)</li>
+                    <li>transcript</li>
+                </ul>
+            </div>
+
+            <!-- Phone Calls -->
+            <div class="bg-cyan-900/10 border border-cyan-500/50 p-4 rounded shadow-lg shadow-cyan-500/10">
+                <h3 class="orbitron text-sm font-bold text-cyan-400 mb-2 border-b border-cyan-500/30 pb-1">phone_calls
+                </h3>
+                <ul class="text-xs space-y-1 font-mono text-cyan-200">
+                    <li>call_id (PK)</li>
+                    <li>caller_id (FK → people.person_id)</li>
+                    <li>receiver_id (FK → people.person_id)</li>
+                    <li>call_time</li>
+                    <li>duration</li>
+                </ul>
+            </div>
+
+            <!-- Bank Transactions -->
+            <div class="bg-cyan-900/10 border border-cyan-500/50 p-4 rounded shadow-lg shadow-cyan-500/10">
+                <h3 class="orbitron text-sm font-bold text-cyan-400 mb-2 border-b border-cyan-500/30 pb-1">
+                    bank_transactions</h3>
+                <ul class="text-xs space-y-1 font-mono text-cyan-200">
+                    <li>transaction_id (PK)</li>
+                    <li>sender_id (FK → people.person_id)</li>
+                    <li>receiver_id (FK → people.person_id)</li>
+                    <li>amount</li>
+                    <li>transaction_time</li>
+                </ul>
+            </div>
+
+            <!-- Cafe Checkins -->
+            <div class="bg-cyan-900/10 border border-cyan-500/50 p-4 rounded shadow-lg shadow-cyan-500/10">
+                <h3 class="orbitron text-sm font-bold text-cyan-400 mb-2 border-b border-cyan-500/30 pb-1">cafe_checkins
+                </h3>
+                <ul class="text-xs space-y-1 font-mono text-cyan-200">
+                    <li>checkin_id (PK)</li>
+                    <li>person_id (FK → people.person_id)</li>
+                    <li>cafe_name</li>
+                    <li>checkin_time</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mt-12 p-6 border border-yellow-500/30 bg-yellow-900/5 rounded">
+            <h4 class="orbitron text-yellow-500 text-sm font-bold mb-2">OPERATIONAL ADVISORY</h4>
+            <p class="text-xs text-yellow-200/80 leading-relaxed">
+                Connect the dots. Person IDs are the common denominator across financial transactions, phone calls, and
+                cafe visits. Use the owner ID to link vehicles to suspects mentioned in transcripts.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

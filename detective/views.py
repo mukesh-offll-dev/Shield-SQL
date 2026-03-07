@@ -1,0 +1,79 @@
+from django.shortcuts import render
+from django.db import connection
+from django.http import JsonResponse
+import re
+import time
+
+def home(request):
+    return render(request, 'detective/home.html')
+
+def schema(request):
+    return render(request, 'detective/schema.html')
+
+def start_investigation(request):
+    """Initialize the 45-minute investigation session."""
+    if request.method == 'POST':
+        request.session['start_time'] = time.time()
+        request.session['is_started'] = True
+        request.session['switch_count'] = 0
+        request.session['is_disqualified'] = False
+        return JsonResponse({'status': 'success', 'start_time': request.session['start_time']})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+def record_tab_switch(request):
+    """Record a tab switch incident (MAX 2 strikes)."""
+    if request.method == 'POST' and request.session.get('is_started'):
+        count = request.session.get('switch_count', 0) + 1
+        request.session['switch_count'] = count
+        if count >= 2:
+            request.session['is_disqualified'] = True
+        return JsonResponse({'status': 'success', 'count': count, 'disqualified': request.session['is_disqualified']})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+def investigate(request):
+    is_started = request.session.get('is_started', False)
+    start_time = request.session.get('start_time', 0)
+    is_disqualified = request.session.get('is_disqualified', False)
+    
+    # Check for time-up
+    current_time = time.time()
+    time_limit = 45 * 60 # 45 minutes
+    is_time_up = False
+    time_remaining = time_limit
+    
+    if is_started:
+        elapsed = current_time - start_time
+        time_remaining = max(0, time_limit - elapsed)
+        if elapsed > time_limit:
+            is_time_up = True
+
+    query = request.POST.get('query', '')
+    results = None
+    error = None
+    columns = None
+
+    if request.method == 'POST' and not is_time_up and not is_disqualified and is_started:
+        # Security check: Allow only SELECT queries
+        if not re.match(r'^\s*SELECT', query, re.IGNORECASE):
+            error = "Access Denied: Only SELECT queries are permitted by SHIELD Protocol."
+        else:
+            try:
+                with connection.cursor() as cursor:
+                    cursor.execute(query)
+                    columns = [col[0] for col in cursor.description]
+                    results = cursor.fetchall()
+            except Exception as e:
+                error = str(e)
+
+    context = {
+        'query': query,
+        'results': results,
+        'columns': columns,
+        'error': error,
+        'is_started': is_started,
+        'time_remaining': int(time_remaining),
+        'is_time_up': is_time_up,
+        'is_disqualified': is_disqualified,
+        'switch_count': request.session.get('switch_count', 0),
+    }
+    return render(request, 'detective/investigate.html', context)

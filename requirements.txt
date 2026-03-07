@@ -1,0 +1,6 @@
+django
+gunicorn
+whitenoise
+mysqlclient
+pymysql
+python-dotenv
