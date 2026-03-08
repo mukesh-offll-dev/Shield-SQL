@@ -1,7 +1,20 @@
+# Python / Environment
 .env
-*.pyc
+venv/
+env/
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Django
 db.sqlite3
-.DS_Store
+db.sqlite3-journal
 staticfiles/
-ca.pem
+media/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Keep the CA certificate for Render deployment
+!ca.pem
