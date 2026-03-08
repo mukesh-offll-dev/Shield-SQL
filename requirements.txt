@@ -1,6 +1,7 @@
 django
 gunicorn
 whitenoise
+mysqlclient>=2.2.1
 pymysql
 python-dotenv
 cryptography
