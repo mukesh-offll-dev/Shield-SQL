@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SHIELD SQL | Intelligence Console</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --shield-blue: #00d2ff;
@@ -13,39 +16,49 @@
             --shield-panel: rgba(10, 20, 40, 0.8);
             --shield-glow: 0 0 15px rgba(0, 210, 255, 0.5);
         }
+
         body {
             background-color: var(--shield-dark);
             color: #e0e0e0;
             font-family: 'Roboto', sans-serif;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 50% 50%, rgba(0, 50, 100, 0.2) 0%, transparent 80%),
                 linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
             background-size: 100% 100%, 40px 40px, 40px 40px;
         }
-        .orbitron { font-family: 'Orbitron', sans-serif; }
+
+        .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
         .shield-border {
             border: 1px solid var(--shield-blue);
             box-shadow: var(--shield-glow);
         }
+
         .shield-panel {
             background: var(--shield-panel);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 210, 255, 0.3);
         }
+
         .glow-text {
             text-shadow: 0 0 10px rgba(0, 210, 255, 0.8);
         }
+
         .btn-shield {
             background: linear-gradient(135deg, #00507a 0%, #00d2ff 100%);
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
+
         .btn-shield:hover {
             box-shadow: 0 0 20px var(--shield-blue);
             transform: scale(1.05);
         }
+
         .scanline {
             width: 100%;
             height: 2px;
@@ -55,38 +68,126 @@
             z-index: 100;
             animation: scan 8s linear infinite;
         }
+
         @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
+            0% {
+                top: 0;
+            }
+
+            100% {
+                top: 100%;
+            }
         }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col">
     <div class="scanline"></div>
 
     <!-- Header -->
     <header class="p-6 shield-panel border-b border-cyan-500/30 flex justify-between items-center">
         <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 rounded-full border-2 border-cyan-400 flex items-center justify-center glow-text orbitron text-xl">
+            <div
+                class="w-12 h-12 rounded-full border-2 border-cyan-400 flex items-center justify-center glow-text orbitron text-xl">
                 S
             </div>
             <h1 class="orbitron text-2xl font-bold tracking-widest text-cyan-400 glow-text">SHIELD SQL</h1>
         </div>
         <nav class="space-x-8 orbitron text-xs tracking-tighter">
             <a href="{% url 'detective:home' %}" class="hover:text-cyan-400 transition-colors uppercase">HQ</a>
-            <a href="{% url 'detective:schema' %}" class="hover:text-cyan-400 transition-colors uppercase">Database Schema</a>
-            <a href="{% url 'detective:investigate' %}" class="hover:text-cyan-400 transition-colors uppercase">Investigation Console</a>
+            <a href="{% url 'detective:investigate' %}"
+                class="hover:text-cyan-400 transition-colors uppercase">Investigation Console</a>
         </nav>
     </header>
+
+    <script>
+        // Global Mission State (Initialized by Context Processor)
+        let isStarted = {{ is_started| lower }};
+        let isDisqualified = {{ is_disqualified| lower }};
+        let isTimeUp = {{ is_time_up| lower }};
+        let isInternalNavigation = false;
+    </script>
 
     <!-- Main Content -->
     <main class="flex-grow container mx-auto p-8">
         {% block content %}{% endblock %}
     </main>
+    <!-- Disqualification Overlay -->
+    <div id="disqualified-overlay"
+        class="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-8 {% if not is_disqualified %}hidden{% endif %}">
+        <div
+            class="max-w-xl text-center shield-panel p-12 border-2 border-red-500 rounded-lg shadow-[0_0_50px_rgba(239,68,68,0.5)]">
+            <h2 class="orbitron text-5xl font-bold text-red-500 glow-text mb-6">DISQUALIFIED</h2>
+            <p class="text-xl text-red-200 mb-8 uppercase tracking-widest">Multiple SHIELD Protocol Violations Detected
+                (Tab Change/Minimize).</p>
+            <div class="p-6 bg-red-900/20 border border-red-500/50 text-red-400 font-mono text-sm">Case Intelligence
+                Access Revoked per Directive 11.</div>
+        </div>
+    </div>
+
+    <!-- Time Up Overlay -->
+    <div id="timeup-overlay"
+        class="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-8 {% if not is_time_up %}hidden{% endif %}">
+        <div
+            class="max-w-xl text-center shield-panel p-12 border-2 border-yellow-500 rounded-lg shadow-[0_0_50px_rgba(234,179,8,0.5)]">
+            <h2 class="orbitron text-5xl font-bold text-yellow-500 glow-text mb-6">MISSION TIME EXPIRED</h2>
+            <p class="text-xl text-yellow-200 mb-8 uppercase tracking-widest">The 45-Minute Investigation Window Has
+                Closed.</p>
+            <a href="{% url 'detective:home' %}"
+                class="btn-shield px-12 py-4 rounded-full orbitron font-bold text-white">Return to HQ</a>
+        </div>
+    </div>
+
+    <script>
+        // Mission Monitoring System (Behavior)
+
+        // Mark internal clicks to prevent false positives
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (link && link.href && link.href.startsWith(window.location.origin)) {
+                isInternalNavigation = true;
+            }
+        });
+
+        // Tab Switch / Minimize Detection
+        document.addEventListener('visibilitychange', async () => {
+            // We only care if the tab is hidden AND we are started AND we are NOT navigating within the site
+            if (document.hidden && isStarted && !isTimeUp && !isDisqualified && !isInternalNavigation) {
+                const response = await fetch("{% url 'detective:record_tab_switch' %}", {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+                });
+                const data = await response.json();
+                if (data.disqualified) {
+                    document.getElementById('disqualified-overlay').classList.remove('hidden');
+                    isDisqualified = true;
+                } else {
+                    alert(`SHIELD WARNING: PROTOCOL DEVIATION DETECTED. Strike ${data.count}/2.`);
+                    // Optional: Update strike display if on investigate page
+                    const strikeDisplay = document.getElementById('strike-display');
+                    if (strikeDisplay) {
+                        strikeDisplay.textContent = `WARNING (STRIKES: ${data.count}/2)`;
+                        strikeDisplay.classList.remove('text-green-500');
+                        strikeDisplay.classList.add('text-yellow-500');
+                    }
+                }
+            }
+            // Reset flag after a short delay
+            if (!document.hidden) {
+                setTimeout(() => { isInternalNavigation = false; }, 500);
+            }
+        });
+
+        // Prevent page refresh/back from clearing internal navigation flag too early
+        window.addEventListener('beforeunload', () => {
+            // If the user navigates away via a link, we already set isInternalNavigation
+        });
+    </script>
 
     <!-- Footer -->
     <footer class="p-4 text-center text-xs text-cyan-500/50 orbitron">
         CLASSIFIED // LEVEL 7 CLEARANCE ONLY // S.H.I.E.L.D. DATABASE v5.2.9
     </footer>
 </body>
+
 </html>

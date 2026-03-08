@@ -43,11 +43,15 @@ def investigate(request):
     
     if is_started:
         elapsed = current_time - start_time
-        time_remaining = max(0, time_limit - elapsed)
         if elapsed > time_limit:
             is_time_up = True
 
     query = request.POST.get('query', '')
+    if query:
+        request.session['last_query'] = query
+    elif request.method == 'GET':
+        query = request.session.get('last_query', '')
+        
     results = None
     error = None
     columns = None
@@ -70,10 +74,5 @@ def investigate(request):
         'results': results,
         'columns': columns,
         'error': error,
-        'is_started': is_started,
-        'time_remaining': int(time_remaining),
-        'is_time_up': is_time_up,
-        'is_disqualified': is_disqualified,
-        'switch_count': request.session.get('switch_count', 0),
     }
     return render(request, 'detective/investigate.html', context)
