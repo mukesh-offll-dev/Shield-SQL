@@ -1,6 +1,6 @@
 django
 gunicorn
 whitenoise
-mysqlclient
+mysqlclient>=2.2.1
 pymysql
 python-dotenv
