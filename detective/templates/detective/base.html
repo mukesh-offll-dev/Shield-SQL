@@ -7,29 +7,36 @@
     <title>SHIELD SQL | Intelligence Console</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
             --shield-blue: #00d2ff;
             --shield-dark: #050a14;
-            --shield-panel: rgba(10, 20, 40, 0.8);
-            --shield-glow: 0 0 15px rgba(0, 210, 255, 0.5);
+            --shield-panel: rgba(8, 15, 30, 0.85);
+            --shield-glow: 0 0 20px rgba(0, 210, 255, 0.4);
+            --shield-accent: #06b6d4;
         }
 
         body {
             background-color: var(--shield-dark);
-            color: #e0e0e0;
-            font-family: 'Roboto', sans-serif;
+            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background-image:
-                radial-gradient(circle at 50% 50%, rgba(0, 50, 100, 0.2) 0%, transparent 80%),
-                linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
+                radial-gradient(circle at 50% 50%, rgba(0, 50, 100, 0.25) 0%, transparent 85%),
+                linear-gradient(rgba(0, 210, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 210, 255, 0.03) 1px, transparent 1px);
             background-size: 100% 100%, 40px 40px, 40px 40px;
+            -webkit-font-smoothing: antialiased;
         }
 
         .orbitron {
             font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .shield-border {
@@ -94,7 +101,7 @@
             <h1 class="orbitron text-2xl font-bold tracking-widest text-cyan-400 glow-text">SHIELD SQL</h1>
         </div>
         <nav class="space-x-8 orbitron text-xs tracking-tighter">
-            <a href="{% url 'detective:home' %}" class="hover:text-cyan-400 transition-colors uppercase">HQ</a>
+            <a href="{% url 'detective:home' %}" class="hover:text-cyan-400 transition-colors uppercase">Case File</a>
             <a href="{% url 'detective:investigate' %}"
                 class="hover:text-cyan-400 transition-colors uppercase">Investigation Console</a>
         </nav>

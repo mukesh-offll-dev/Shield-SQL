@@ -1,0 +1,39 @@
+{% extends 'detective/base.html' %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-20">
+    <div class="shield-panel p-8 rounded-lg border-2 border-red-500/50 relative overflow-hidden">
+        <div class="flex flex-col items-center mb-8">
+            <div
+                class="w-20 h-20 rounded-full border-2 border-red-400 flex items-center justify-center glow-text orbitron text-3xl mb-4">
+                A
+            </div>
+            <h2 class="orbitron text-2xl font-bold text-red-400 glow-text uppercase tracking-widest text-center">Admin
+                Access</h2>
+            <p class="text-red-500/60 text-[10px] orbitron mt-2">RESTRICTED CONSOLE // COMMAND LEVEL</p>
+        </div>
+
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <label for="password"
+                    class="block orbitron text-xs text-red-400 mb-2 uppercase tracking-tighter">Command Code</label>
+                <input type="password" name="password" id="password" required
+                    class="w-full bg-black/60 border border-red-500/50 rounded p-4 font-mono text-red-300 focus:outline-none focus:border-red-400 text-center tracking-[1em]"
+                    placeholder="••••••••">
+            </div>
+
+            {% if error %}
+            <div class="bg-red-900/20 border border-red-500/50 p-3 text-red-400 text-xs font-mono text-center">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <button type="submit"
+                class="w-full bg-red-900/40 hover:bg-red-800/60 border border-red-500 text-white py-4 rounded orbitron font-bold uppercase tracking-widest transition-all">
+                Enter Command Center
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

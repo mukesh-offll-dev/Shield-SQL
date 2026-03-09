@@ -28,8 +28,7 @@
             class="lg:col-span-12 flex justify-between items-center shield-panel p-4 rounded border border-cyan-500/30">
             <div class="flex items-center space-x-6">
                 <div>
-                    <span class="text-[10px] orbitron text-cyan-500/50 block">AGENT CLEARANCE</span>
-                    <span class="text-cyan-400 orbitron uppercase">Level 7 / Tactical</span>
+                    <span class="text-[10px] orbitron text-cyan-500/50 block">AGENT CLEARANCE</span> 
                 </div>
             </div>
 
@@ -54,14 +53,14 @@
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="orbitron text-xl font-bold text-cyan-400 glow-text uppercase tracking-widest">SQL
                         Tactical Console</h2>
-                    <span class="text-xs font-mono text-green-500">LINK: STABLE</span>
+                    <span class="text-xs mono text-green-500">LINK: STABLE</span>
                 </div>
 
                 <form id="query-form" action="{% url 'detective:investigate' %}" method="POST">
                     {% csrf_token %}
                     <div class="relative">
                         <textarea id="query-box" name="query" rows="5"
-                            class="w-full bg-black/60 border border-cyan-500/50 rounded p-4 font-mono text-cyan-300 focus:outline-none focus:border-cyan-400"
+                            class="w-full bg-black/60 border border-cyan-500/50 rounded p-4 mono text-cyan-300 focus:outline-none focus:border-cyan-400"
                             placeholder="SELECT * FROM crime_scene_report...">{{ query }}</textarea>
                         <div class="absolute bottom-4 right-4">
                             <button type="submit" id="execute-btn"
@@ -73,11 +72,49 @@
                 </form>
             </div>
 
+            <!-- Final Answer Submission -->
+            <div id="submission-panel"
+                class="shield-panel p-6 rounded-lg border-2 {% if is_submitted %}border-green-500/50{% else %}border-yellow-500/50{% endif %}">
+                <div class="flex justify-between items-center mb-4">
+                    <h2
+                        class="orbitron text-xl font-bold {% if is_submitted %}text-green-400{% else %}text-yellow-400{% endif %} glow-text uppercase tracking-widest">
+                        Final Report</h2>
+                    <span id="submission-status"
+                        class="text-xs mono {% if is_submitted %}text-green-500{% else %}text-yellow-500{% endif %}">
+                        {% if is_submitted %}STATUS: ARCHIVED{% else %}STATUS: PENDING{% endif %}
+                    </span>
+                </div>
+
+                <div id="submission-form-container" class="{% if is_submitted %}opacity-75{% endif %}">
+                    <div class="relative">
+                        <label for="planner_name"
+                            class="block orbitron text-[10px] text-cyan-400 mb-2 uppercase tracking-tighter">Planner
+                            Name</label>
+                        <input type="text" id="planner_name" name="planner_name"
+                            class="w-full bg-black/60 border border-cyan-500/50 rounded p-4 mono text-cyan-300 focus:outline-none focus:border-cyan-400 placeholder-cyan-900"
+                            placeholder="ENTER THE SUSPECT NAME" {% if is_submitted %}disabled{% endif %}>
+
+                        <div class="mt-4 flex justify-end">
+                            <button type="button" id="submit-answer-btn"
+                                class="btn-shield px-8 py-3 rounded orbitron font-bold text-white text-sm {% if is_submitted %}opacity-50 cursor-not-allowed{% endif %}"
+                                {% if is_submitted %}disabled{% endif %}>
+                                {% if is_submitted %}SUBMITTED{% else %}SUBMIT REPORT{% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="success-msg"
+                    class="mt-4 p-3 bg-green-900/20 border border-green-500/50 text-green-400 text-xs mono text-center {% if not is_submitted %}hidden{% endif %}">
+                    Submitted successfully
+                </div>
+            </div>
+
             <!-- Results -->
             {% if error %}
             <div class="bg-red-900/20 border-l-4 border-red-500 p-4">
                 <span class="orbitron text-red-400 font-bold uppercase tracking-tight text-xs">Access Error:</span>
-                <p class="mt-1 text-sm text-red-200/80 font-mono">{{ error }}</p>
+                <p class="mt-1 text-sm text-red-200/80 mono">{{ error }}</p>
             </div>
             {% endif %}
 
@@ -86,7 +123,7 @@
                 <h3 class="orbitron text-sm font-bold text-cyan-400 uppercase tracking-widest mb-4">Intel Retrieved ({{
                     results|length }} records)</h3>
                 <div class="overflow-x-auto border border-cyan-500/20 rounded max-h-[500px]">
-                    <table class="w-full text-left text-[10px] font-mono whitespace-nowrap">
+                    <table class="w-full text-left text-[10px] mono whitespace-nowrap">
                         <thead class="bg-cyan-900/40 text-cyan-400 uppercase sticky top-0">
                             <tr>
                                 {% for col in columns %}
@@ -127,7 +164,7 @@
                         <div class="flex justify-between items-center mb-2 border-b border-cyan-500/30">
                             <span class="orbitron text-[11px] font-bold text-cyan-400">crime_scene_report</span>
                         </div>
-                        <ul class="text-[10px] space-y-1 font-mono text-cyan-200/70">
+                        <ul class="text-[10px] space-y-1 mono text-cyan-200/70">
                             <li>id <span class="text-cyan-600">(PK)</span></li>
                             <li>date</li>
                             <li>city</li>
@@ -141,7 +178,7 @@
                         <div class="flex justify-between items-center mb-2 border-b border-cyan-500/30">
                             <span class="orbitron text-[11px] font-bold text-cyan-400">witnesses</span>
                         </div>
-                        <ul class="text-[10px] space-y-1 font-mono text-cyan-200/70">
+                        <ul class="text-[10px] space-y-1 mono text-cyan-200/70">
                             <li>id <span class="text-cyan-600">(PK)</span></li>
                             <li>name</li>
                             <li>address</li>
@@ -154,7 +191,7 @@
                         <div class="flex justify-between items-center mb-2 border-b border-cyan-500/30">
                             <span class="orbitron text-[11px] font-bold text-cyan-400">witness_interviews</span>
                         </div>
-                        <ul class="text-[10px] space-y-1 font-mono text-cyan-200/70">
+                        <ul class="text-[10px] space-y-1 mono text-cyan-200/70">
                             <li>id <span class="text-cyan-600">(PK)</span></li>
                             <li>name</li>
                             <li>interview_date</li>
@@ -167,7 +204,7 @@
                         <div class="flex justify-between items-center mb-2 border-b border-cyan-500/30">
                             <span class="orbitron text-[11px] font-bold text-cyan-400">gym_checkins</span>
                         </div>
-                        <ul class="text-[10px] space-y-1 font-mono text-cyan-200/70">
+                        <ul class="text-[10px] space-y-1 mono text-cyan-200/70">
                             <li>id <span class="text-cyan-600">(PK)</span></li>
                             <li>member_name</li>
                             <li>gym_name</li>
@@ -180,7 +217,7 @@
                         <div class="flex justify-between items-center mb-2 border-b border-cyan-500/30">
                             <span class="orbitron text-[11px] font-bold text-cyan-400">drivers_license</span>
                         </div>
-                        <ul class="text-[10px] space-y-1 font-mono text-cyan-200/70">
+                        <ul class="text-[10px] space-y-1 mono text-cyan-200/70">
                             <li>id <span class="text-cyan-600">(PK)</span></li>
                             <li>name</li>
                             <li>plate_number</li>
@@ -194,7 +231,7 @@
                         <div class="flex justify-between items-center mb-2 border-b border-cyan-500/30">
                             <span class="orbitron text-[11px] font-bold text-cyan-400">phone_calls</span>
                         </div>
-                        <ul class="text-[10px] space-y-1 font-mono text-cyan-200/70">
+                        <ul class="text-[10px] space-y-1 mono text-cyan-200/70">
                             <li>id <span class="text-cyan-600">(PK)</span></li>
                             <li>caller</li>
                             <li>receiver</li>
@@ -208,7 +245,7 @@
                         <div class="flex justify-between items-center mb-2 border-b border-cyan-500/30">
                             <span class="orbitron text-[11px] font-bold text-cyan-400">bank_transactions</span>
                         </div>
-                        <ul class="text-[10px] space-y-1 font-mono text-cyan-200/70">
+                        <ul class="text-[10px] space-y-1 mono text-cyan-200/70">
                             <li>id <span class="text-cyan-600">(PK)</span></li>
                             <li>sender</li>
                             <li>receiver</li>
@@ -222,7 +259,7 @@
                         <div class="flex justify-between items-center mb-2 border-b border-cyan-500/30">
                             <span class="orbitron text-[11px] font-bold text-cyan-400">atm_withdrawals</span>
                         </div>
-                        <ul class="text-[10px] space-y-1 font-mono text-cyan-200/70">
+                        <ul class="text-[10px] space-y-1 mono text-cyan-200/70">
                             <li>id <span class="text-cyan-600">(PK)</span></li>
                             <li>person_name</li>
                             <li>atm_location</li>
@@ -232,13 +269,7 @@
                     </div>
                 </div>
 
-                <div class="mt-6 p-3 border border-yellow-500/30 bg-yellow-900/5 rounded">
-                    <h4 class="orbitron text-yellow-500 text-[10px] font-bold mb-1">TACTICAL NOTE</h4>
-                    <p class="text-[9px] text-yellow-200/60 leading-tight">
-                        Check patterns across gym visits and bank records. Witness interviews often mention partial
-                        plates (TRI).
-                    </p>
-                </div>
+
             </div>
         </div>
     </div>
@@ -338,6 +369,61 @@
         const data = await response.json();
         if (data.status === 'success') {
             location.reload();
+        }
+    });
+
+    // Answer Submission
+    const submitBtn = document.getElementById('submit-answer-btn');
+    const plannerInput = document.getElementById('planner_name');
+    const successMsg = document.getElementById('success-msg');
+    const submissionPanel = document.getElementById('submission-panel');
+    const submissionStatus = document.getElementById('submission-status');
+
+    submitBtn.addEventListener('click', async () => {
+        const plannerName = plannerInput.value.trim();
+        if (!plannerName) {
+            alert("Please enter the planner name before submitting.");
+            return;
+        }
+
+        if (!confirm("Are you sure? This is your one and only submission.")) {
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = "SUBMITTING...";
+
+        try {
+            const formData = new FormData();
+            formData.append('planner_name', plannerName);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+            const response = await fetch("{% url 'detective:submit_answer' %}", {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            if (data.status === 'success') {
+                plannerInput.disabled = true;
+                submitBtn.innerHTML = "SUBMITTED";
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                successMsg.classList.remove('hidden');
+                submissionPanel.classList.remove('border-yellow-500/50');
+                submissionPanel.classList.add('border-green-500/50');
+                submissionStatus.textContent = "STATUS: ARCHIVED";
+                submissionStatus.classList.remove('text-yellow-500');
+                submissionStatus.classList.add('text-green-500');
+            } else {
+                alert(data.message);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = "SUBMIT REPORT";
+            }
+        } catch (error) {
+            console.error(error);
+            alert("An error occurred during submission.");
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = "SUBMIT REPORT";
         }
     });
 </script>

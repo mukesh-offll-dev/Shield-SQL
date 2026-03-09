@@ -1,0 +1,65 @@
+{% extends 'detective/base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-10">
+        <div>
+            <h2 class="orbitron text-3xl font-bold text-cyan-400 glow-text uppercase tracking-widest">Command Center
+            </h2>
+            <p class="text-cyan-500/60 text-xs orbitron mt-1">REAL-TIME MISSION MONITORING</p>
+        </div>
+        <a href="{% url 'detective:student_logout' %}"
+            class="orbitron text-xs text-red-400 hover:text-red-300 border border-red-500/30 px-4 py-2 rounded">TERMINATE
+            SESSION</a>
+    </div>
+
+    <div class="shield-panel rounded-lg border border-cyan-500/30 overflow-hidden">
+        <div class="bg-cyan-900/20 p-4 border-b border-cyan-500/30 flex justify-between items-center">
+            <h3 class="orbitron text-sm font-bold text-cyan-400 uppercase tracking-widest">Active Operatives ({{
+                participants|length }})</h3>
+            <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span class="text-[10px] font-mono text-green-500">LIVE SATELLITE LINK</span>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left font-mono text-sm">
+                <thead class="bg-black/40 text-cyan-500 uppercase text-[10px] tracking-tighter">
+                    <tr>
+                        <th class="p-4 border-b border-cyan-500/20">ID</th>
+                        <th class="p-4 border-b border-cyan-500/20">Student Name</th>
+                        <th class="p-4 border-b border-cyan-500/20">Planner Answer</th>
+                        <th class="p-4 border-b border-cyan-500/20">Completion Time</th>
+                        <th class="p-4 border-b border-cyan-500/20 text-right">Submitted At</th>
+                    </tr>
+                </thead>
+                <tbody class="text-cyan-100 divide-y divide-cyan-500/10">
+                    {% for p in participants %}
+                    <tr
+                        class="hover:bg-cyan-500/5 transition-colors {% if forloop.first %}bg-cyan-500/10 border-l-4 border-cyan-400{% endif %}">
+                        <td class="p-4">#{{ p.id }}</td>
+                        <td class="p-4 font-bold text-white">{{ p.student_name }}</td>
+                        <td class="p-4 text-cyan-300">{{ p.planner_answer }}</td>
+                        <td class="p-4">
+                            <span class="px-2 py-1 rounded bg-black/40 border border-cyan-500/30">
+                                {{ p.completion_time }}s
+                            </span>
+                            {% if forloop.first %}
+                            <span class="ml-2 text-[10px] text-yellow-500 orbitron">★ FASTEST</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 text-right text-xs text-cyan-500/60">{{ p.submitted_at|date:"Y-m-d H:i:s" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="p-20 text-center text-cyan-500/30 italic">No mission reports filed yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

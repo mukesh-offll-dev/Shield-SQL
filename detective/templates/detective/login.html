@@ -1,0 +1,53 @@
+{% extends 'detective/base.html' %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-20">
+    <div class="shield-panel p-8 rounded-lg border-2 border-cyan-500/50 relative overflow-hidden">
+        <div class="flex flex-col items-center mb-8">
+            <div
+                class="w-20 h-20 rounded-full border-2 border-cyan-400 flex items-center justify-center glow-text orbitron text-3xl mb-4">
+                S
+            </div>
+            <h2 class="orbitron text-2xl font-bold text-cyan-400 glow-text uppercase tracking-widest text-center">
+                Authentication Required</h2>
+            <p class="text-cyan-500/60 text-[10px] orbitron mt-2">SECURE GATEWAY // LEVEL 7 ACCESS</p>
+        </div>
+
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <label for="student_name"
+                    class="block orbitron text-xs text-cyan-400 mb-2 uppercase tracking-tighter">Student Name</label>
+                <input type="text" name="student_name" id="student_name" required
+                    class="w-full bg-black/60 border border-cyan-500/50 rounded p-4 mono text-cyan-300 focus:outline-none focus:border-cyan-400"
+                    placeholder="ENTER YOUR NAME">
+            </div>
+            <div>
+                <label for="password"
+                    class="block orbitron text-xs text-cyan-400 mb-2 uppercase tracking-tighter">Access Code</label>
+                <input type="password" name="password" id="password" required
+                    class="w-full bg-black/60 border border-cyan-500/50 rounded p-4 mono text-cyan-300 focus:outline-none focus:border-cyan-400 text-center tracking-[1em]"
+                    placeholder="••••••••">
+            </div>
+
+            {% if error %}
+            <div class="bg-red-900/20 border border-red-500/50 p-3 text-red-400 text-xs mono text-center">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <button type="submit"
+                class="w-full btn-shield py-4 rounded orbitron font-bold text-white uppercase tracking-widest">
+                Verify Identity
+            </button>
+        </form>
+
+        <div class="mt-8 pt-6 border-t border-cyan-500/20 text-center">
+            <p class="text-[9px] text-cyan-500/40 uppercase orbitron leading-tight">
+                Unauthorized access to SHIELD databases is a federal offense. <br>
+                All connection attempts are being logged.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
